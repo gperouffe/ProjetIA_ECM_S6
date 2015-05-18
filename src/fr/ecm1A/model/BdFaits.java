@@ -1,9 +1,11 @@
 package fr.ecm1A.model;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -34,6 +36,35 @@ public class BdFaits extends ArrayList<Fait>{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally {
+			try {
+				bfr.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	public void save(String chemin){
+		File save = new File(chemin);
+		BufferedWriter bfw = null;
+		try { 
+			bfw = new BufferedWriter(new FileWriter(save));
+		for (Fait x : this){
+			bfw.write(x.getNom() + ";" + x.getVal()+"\n");
+		}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				bfw.flush();
+				bfw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
