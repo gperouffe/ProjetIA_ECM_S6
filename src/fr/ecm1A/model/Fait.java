@@ -7,6 +7,8 @@ public class Fait {
 
 	public Fait (String nom){
 		this.nom=nom;
+		this.val=false;
+		
 	}
 
 	public String getNom() {
