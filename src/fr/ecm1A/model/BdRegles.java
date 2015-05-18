@@ -10,28 +10,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class BdFaits extends ArrayList<Fait>{
+public class BdRegles extends ArrayList<Regle>{
+
+	public BdRegles(){}
 	
-	public BdFaits(){}
-	
-	public BdFaits(BdFaits bdf){
-		super(bdf);
+	public BdRegles(BdRegles bdr){
+		super(bdr);
 	}
 	
-	public BdFaits(String chemin){
+	public BdRegles(String chemin){
 		File save = new File(chemin);
 		BufferedReader bfr = null;
-		
 		try {
 			bfr = new BufferedReader(new FileReader(save));
 			String[] lecture = new String[2];
 			do{
 				lecture = (new String(bfr.readLine())).split(";");
 				if(lecture != null){
-					Fait x = new Fait(lecture[0]);
-					if(lecture[1]=="true"){
-						x.setVal(true);
+					Conditions cond = new Conditions();
+					for (String x : lecture[0].split(",")){
+						cond.add(new Fait(x));
 					}
+					Regle x = new Regle(cond,new Fait(lecture[1]));
 					this.add(x);
 				}
 			}while(lecture != null);
@@ -58,8 +58,13 @@ public class BdFaits extends ArrayList<Fait>{
 		BufferedWriter bfw = null;
 		try { 
 			bfw = new BufferedWriter(new FileWriter(save));
-		for (Fait x : this){
-			bfw.write(x.getNom() + ";" + x.getVal()+"\n");
+		for (Regle x : this){
+			String temp = new String();
+			for (Fait y : x.getConditions()){
+				temp += y.getNom();
+			}
+			temp+=x.getConclusion().getNom();
+			bfw.write(temp);
 		}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -75,4 +80,5 @@ public class BdFaits extends ArrayList<Fait>{
 			}
 		}
 	}
+	
 }
