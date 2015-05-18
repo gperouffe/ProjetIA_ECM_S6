@@ -61,9 +61,9 @@ public class BdRegles extends ArrayList<Regle>{
 		for (Regle x : this){
 			String temp = new String();
 			for (Fait y : x.getConditions()){
-				temp += y.getNom();
+				temp += y.getNom() + ",";
 			}
-			temp+=x.getConclusion().getNom();
+			temp+=";" + x.getConclusion().getNom();
 			bfw.write(temp);
 		}
 		} catch (IOException e) {
