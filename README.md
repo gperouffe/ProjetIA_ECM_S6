@@ -6,4 +6,5 @@ Ecole Centrale de Marseille
 
 Sujet : Implémentation d'un moteur d'inférences<br>
 Groupe : A. Chambon, G. Perouffe<br>
-Enseignant : C. Jazzar
+Enseignant : C. Jazzar<br>
+A rendre pour le 16 Juin 2015
