@@ -16,7 +16,7 @@ public class Fait {
 	}
 
 	public void setNom(String nom) {
-		this.nom = nom;
+		this.nom = new String(nom);
 	}
 
 	public Boolean getVal() {

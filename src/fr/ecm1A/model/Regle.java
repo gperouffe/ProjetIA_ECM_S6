@@ -3,9 +3,9 @@ package fr.ecm1A.model;
 
 public class Regle {
 	private Conditions conditions;
-	private Fait conclusion;
+	private String conclusion;
 	
-	public Regle(Conditions conditions, Fait conclusion){
+	public Regle(Conditions conditions, String conclusion){
 		this.conditions = conditions;
 		this.conclusion = conclusion;
 	}
@@ -14,11 +14,11 @@ public class Regle {
 		return conditions;
 	}
 
-	public Fait getConclusion() {
+	public String getConclusion() {
 		return conclusion;
 	}
 
-	public void setConclusion(Fait conclusion) {
+	public void setConclusion(String conclusion) {
 		this.conclusion = conclusion;
 	}
 	
