@@ -27,7 +27,7 @@ public class Fait {
 		this.val = val;
 	}
 	
-	public void valider(){
+	public void valider() {
 		this.val = true;
 	}
 	
