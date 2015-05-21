@@ -27,6 +27,10 @@ public class Fait {
 		this.val = val;
 	}
 	
+	public void valider(){
+		this.val = true;
+	}
+	
 	public String toString() {
 		return this.nom;
 	}
