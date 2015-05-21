@@ -34,6 +34,7 @@ public class SystemeExpert {
 	public void chainageAvant() {
 		Boolean saturation = new Boolean(false);
 		while (!saturation) {
+			saturation = true;
 			for (Regle r : this.bdr) {
 				Boolean declenchement = new Boolean(true);
 				for (String cond : r.getConditions()) {
@@ -48,8 +49,10 @@ public class SystemeExpert {
 						resultatRech = new Fait(r.getConclusion());
 						bdf.add(resultatRech);
 					}
-					resultatRech.valider();
-					saturation = true;
+					if (!resultatRech.getVal()) {
+						resultatRech.valider();
+						saturation = false;
+					}
 				} else {
 					if (resultatRech == null) {
 						resultatRech = new Fait(r.getConclusion());
