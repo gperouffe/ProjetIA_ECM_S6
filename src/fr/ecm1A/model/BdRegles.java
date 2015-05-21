@@ -29,9 +29,9 @@ public class BdRegles extends ArrayList<Regle>{
 				if(lecture != null){
 					Conditions cond = new Conditions();
 					for (String x : lecture[0].split(",")){
-						cond.add(new String(x));
+						cond.add(new Fait(x));
 					}
-					Regle x = new Regle(cond,new String(lecture[1]));
+					Regle x = new Regle(cond,new Fait(lecture[1]));
 					this.add(x);
 				}
 			}while(lecture != null);
@@ -60,7 +60,7 @@ public class BdRegles extends ArrayList<Regle>{
 			bfw = new BufferedWriter(new FileWriter(save));
 		for (Regle x : this){
 			String temp = new String();
-			for (String y : x.getConditions()){
+			for (Fait y : x.getConditions()){
 				temp += y + ",";
 			}
 			temp+=";" + x.getConclusion();

@@ -27,4 +27,7 @@ public class Fait {
 		this.val = val;
 	}
 	
+	public String toString() {
+		return this.nom;
+	}
 }
