@@ -75,4 +75,14 @@ public class BdFaits extends ArrayList<Fait>{
 			}
 		}
 	}
+	public Fait find(String nom){
+		Fait resultat = null;
+		int i = 0;
+		while(i<this.size()||resultat==null){
+			if(this.get(i).getNom()==nom){
+				resultat=this.get(i);
+			}
+		}
+		return resultat;
+	}
 }
