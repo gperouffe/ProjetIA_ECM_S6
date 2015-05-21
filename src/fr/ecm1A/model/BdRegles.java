@@ -31,7 +31,7 @@ public class BdRegles extends ArrayList<Regle>{
 					for (String x : lecture[0].split(",")){
 						cond.add(x);
 					}
-					Regle x = new Regle(cond,new Fait(lecture[1]));
+					Regle x = new Regle(cond,new String(lecture[1]));
 					this.add(x);
 				}
 			}while(lecture != null);
