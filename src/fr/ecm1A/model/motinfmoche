@@ -1,0 +1,6 @@
+while (satprst != satprcd)
+	do
+	for Reg in BdR
+		do
+		for Conds in Reg.condition
+		
