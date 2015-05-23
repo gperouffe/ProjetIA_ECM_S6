@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>.settings/org.eclipse.swt_3.103.2.v20150203-1313.jar</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/lib/org.eclipse.swt_3.103.2.v20150203-1313.jar</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
