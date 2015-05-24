@@ -24,6 +24,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fr.ecm1A.model.Fait;
 import fr.ecm1A.model.SystemeExpert;
+import fr.ecm1A.model.TableModelBDF;
 
 public class Application {
 
@@ -52,8 +53,8 @@ public class Application {
 	 * Create the application.
 	 */
 	public Application() {
+		SE = SystemeExpert.getInstance();
 		initialize();
-		SE = new SystemeExpert();
 	}
 
 	/**
@@ -197,6 +198,8 @@ public class Application {
 		panel_1.add(scrollPane, BorderLayout.CENTER);
 
 		tableBDF = new JTable();
+		TableModelBDF modelbdf = new TableModelBDF();
+		tableBDF.setModel(modelbdf);
 		scrollPane.setViewportView(tableBDF);
 
 		JPanel panel_2 = new JPanel();

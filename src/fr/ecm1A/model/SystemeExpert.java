@@ -4,17 +4,20 @@ public class SystemeExpert {
 
 	private BdFaits bdf;
 	private BdRegles bdr;
+	private static SystemeExpert instance;
 
-	public SystemeExpert() {
+	private SystemeExpert() {
 		bdf = new BdFaits();
 		bdr = new BdRegles();
 	}
-
-	public SystemeExpert(BdFaits bdf, BdRegles bdr) {
-		this.bdf = bdf;
-		this.bdr = bdr;
+	
+	public static SystemeExpert getInstance(){
+		if (instance ==null){
+			instance = new SystemeExpert();
+		}
+		return instance;
 	}
-
+	
 	public BdFaits getBdf() {
 		return bdf;
 	}
