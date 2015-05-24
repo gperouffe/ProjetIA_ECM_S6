@@ -1,16 +1,20 @@
 package fr.ecm1A.model;
 
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
+import javax.swing.table.AbstractTableModel;
 
-public class TableModelBDF implements TableModel {
+import fr.ecm1A.observer.Observable;
+import fr.ecm1A.observer.Observer;
+
+@SuppressWarnings("serial")
+public class TableModelBDF extends AbstractTableModel implements Observer{
 	
 	private BdFaits bdf;
 	private String[] entetes = {"Nom du fait","Valeur de vérité","Modifier","Supprimer"}; 
 	
-	public TableModelBDF(BdFaits bdf){
+	public TableModelBDF(){
 		super();
-		this.bdf=bdf;
+		this.bdf=SystemeExpert.getInstance().getBdf();
+		bdf.addObserver(this);
 	}
 
 	@Override
@@ -25,14 +29,14 @@ public class TableModelBDF implements TableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		switch(entetes[columnIndex]){
-		case "Nom de Fait":
+		switch(columnIndex){
+		case 0:
 			return bdf.get(rowIndex).getNom();
-		case "Valeur de vérité":
+		case 1:
 			return bdf.get(rowIndex).getVal();
-		case "Modifier":
+		case 2:
 			return null;
-		case "Supprimer":
+		case 3:
 			return null;
 		default:
 			throw new IllegalArgumentException();
@@ -40,22 +44,16 @@ public class TableModelBDF implements TableModel {
 	}
 
 	@Override
-	public void addTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		switch(entetes[columnIndex]){
-		case "Nom de Fait":
+		switch(columnIndex){
+		case 0:
 			return String.class;
-		case "Valeur de vérité":
+		case 1:
 			return Boolean.class;
-		case "Modifier":
-			return null;
-		case "Supprimer":
-			return null;
+		case 2:
+			return String.class;
+		case 3:
+			return String.class;
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -63,37 +61,16 @@ public class TableModelBDF implements TableModel {
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		switch(columnIndex){
-	case 0:
-		return entetes[0];
-	case 1:
-		return entetes[1];
-	case 2:
-		return entetes[2];
-	case 3:
-		return entetes[3];
-	default:
-		throw new IllegalArgumentException();
+		return entetes[columnIndex];
+	}
+
+
+	@Override
+	public void update(Observable obs) {
+		if(obs instanceof BdFaits){
+			fireTableDataChanged();
 		}
 	}
-
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return false;
-	}
-
-	@Override
-	public void removeTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 	
 }

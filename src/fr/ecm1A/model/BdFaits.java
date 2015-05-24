@@ -7,10 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+
+import fr.ecm1A.observer.Observable;
 
 @SuppressWarnings("serial")
-public class BdFaits extends ArrayList<Fait>{
+public class BdFaits extends ALObservable<Fait> implements Observable{
 	
 	public BdFaits(){}
 	
@@ -19,6 +20,10 @@ public class BdFaits extends ArrayList<Fait>{
 	}
 	
 	public BdFaits(String chemin){
+		this.open(chemin);
+	}
+	
+	public void open(String chemin){
 		File save = new File(chemin);
 		BufferedReader bfr = null;
 		

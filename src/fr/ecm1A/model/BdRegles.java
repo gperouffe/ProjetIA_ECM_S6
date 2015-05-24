@@ -7,11 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+
+import fr.ecm1A.observer.Observable;
 
 @SuppressWarnings("serial")
-public class BdRegles extends ArrayList<Regle>{
-
+public class BdRegles extends ALObservable<Regle> implements Observable{
+	
 	public BdRegles(){}
 	
 	public BdRegles(BdRegles bdr){
@@ -19,6 +20,10 @@ public class BdRegles extends ArrayList<Regle>{
 	}
 	
 	public BdRegles(String chemin){
+		this.open(chemin);
+	}
+	
+	public void open(String chemin) {
 		File save = new File(chemin);
 		BufferedReader bfr = null;
 		try {
@@ -51,8 +56,9 @@ public class BdRegles extends ArrayList<Regle>{
 			}
 			
 		}
+		
 	}
-	
+
 	public void save(String chemin){
 		File save = new File(chemin);
 		BufferedWriter bfw = null;

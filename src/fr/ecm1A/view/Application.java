@@ -85,7 +85,7 @@ public class Application {
 				jfc.setDialogTitle("Ouvrir la Base de Faits");
 				int reponse = jfc.showOpenDialog(null);
 				if (reponse == JFileChooser.APPROVE_OPTION) {
-					SE.getBdf().save(jfc.getSelectedFile().getAbsolutePath());
+					SE.getBdf().open(jfc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -102,7 +102,7 @@ public class Application {
 				jfc.setDialogTitle("Ouvrir la Base de Règles");
 				int reponse = jfc.showOpenDialog(null);
 				if (reponse == JFileChooser.APPROVE_OPTION) {
-					SE.getBdf().save(jfc.getSelectedFile().getAbsolutePath());
+					SE.getBdr().open(jfc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -139,7 +139,7 @@ public class Application {
 				jfc.setDialogTitle("Enregistrer la Base de Règles");
 				int reponse = jfc.showSaveDialog(null);
 				if (reponse == JFileChooser.APPROVE_OPTION) {
-					SE.getBdf().save(jfc.getSelectedFile().getAbsolutePath());
+					SE.getBdr().save(jfc.getSelectedFile().getAbsolutePath());
 				}
 			}
 		});
@@ -174,10 +174,20 @@ public class Application {
 		menuBar.add(mnLancer);
 
 		JMenuItem mntmChainageAvant = new JMenuItem("Cha\u00EEnage Avant");
+		mntmChainageAvant.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SE.chainageAvant();
+			}
+		});
 		mnLancer.add(mntmChainageAvant);
 
 		JMenuItem mntmChanageArriere = new JMenuItem(
 				"Cha\u00EEnage Arri\u00E8re");
+		mntmChanageArriere.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SE.chainageArriere(JOptionPane.showInputDialog(frame,"Conclusion visée","nom_de_la_conclusion"));
+			}
+		});
 		mnLancer.add(mntmChanageArriere);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
