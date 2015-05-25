@@ -41,25 +41,27 @@ public class SystemeExpert {
 			for (Regle r : this.bdr) {
 				Boolean declenchement = new Boolean(true);
 				for (String cond : r.getConditions()) {
-					Fait resultatRech = bdf.find(cond);
-					if (resultatRech == null || !resultatRech.getVal()) {
+					Fait condFait = bdf.find(cond);
+					if (condFait == null || !condFait.getVal()) {
 						declenchement = false;
 					}
 				}
-				Fait resultatRech = bdf.find(r.getConclusion());
+				Fait conclFait = bdf.find(r.getConclusion());
 				if (declenchement) {
-					if (resultatRech == null) {
-						resultatRech = new Fait(r.getConclusion());
-						bdf.add(resultatRech);
+					if (conclFait == null) {
+						conclFait = new Fait(r.getConclusion());
+						conclFait.valider();
+						bdf.add(conclFait);
 					}
-					if (!resultatRech.getVal()) {
-						resultatRech.valider();
+					if (!conclFait.getVal()) {
+						conclFait.valider();
+						bdf.notifyObservers();
 						saturation = false;
 					}
 				} else {
-					if (resultatRech == null) {
-						resultatRech = new Fait(r.getConclusion());
-						bdf.add(resultatRech);
+					if (conclFait == null) {
+						conclFait = new Fait(r.getConclusion());
+						bdf.add(conclFait);
 					}
 				}
 			}
@@ -80,7 +82,7 @@ public class SystemeExpert {
 			int tailleBdr = bdr.size();
 			while (indr < tailleBdr & !succes) {
 				Regle R = bdr.get(indr);
-				if (but == R.getConclusion()) {
+				if (but.equals(R.getConclusion())) {
 					Boolean possible = true;
 					int indc = 0;
 					Conditions C = R.getConditions();
@@ -105,6 +107,7 @@ public class SystemeExpert {
 			}
 			if (succes) {
 				faitBut.valider();
+				bdf.notifyObservers();
 				return true;
 			} else
 				return false;

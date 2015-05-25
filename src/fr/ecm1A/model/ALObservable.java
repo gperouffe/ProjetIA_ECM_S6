@@ -36,6 +36,12 @@ public class ALObservable<T> extends ArrayList<T> implements Observable {
 	}
 	
 	@Override
+	public void clear(){
+		super.clear();
+		notifyObservers();
+	}
+	
+	@Override
 	public void addObserver(Observer obs) {
 		if(!listObs.contains(obs)){
 			listObs.add(obs);

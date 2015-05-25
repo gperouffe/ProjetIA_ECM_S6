@@ -22,13 +22,15 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import fr.ecm1A.model.Conditions;
 import fr.ecm1A.model.Fait;
 import fr.ecm1A.model.SystemeExpert;
 import fr.ecm1A.model.TableModelBDF;
+import fr.ecm1A.model.TableModelBDR;
 
 public class Application {
 
-	private JFrame frame;
+	private JFrame frmSystmeExpert;
 	private SystemeExpert SE;
 	private JTable tableBDF;
 	private JTable tableBDR;
@@ -41,7 +43,7 @@ public class Application {
 			public void run() {
 				try {
 					Application window = new Application();
-					window.frame.setVisible(true);
+					window.frmSystmeExpert.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -61,12 +63,13 @@ public class Application {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 826, 641);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSystmeExpert = new JFrame();
+		frmSystmeExpert.setTitle("Syst\u00E8me Expert");
+		frmSystmeExpert.setBounds(100, 100, 826, 641);
+		frmSystmeExpert.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+		frmSystmeExpert.setJMenuBar(menuBar);
 
 		JMenu mnFichier = new JMenu("Fichier");
 		menuBar.add(mnFichier);
@@ -145,33 +148,58 @@ public class Application {
 		});
 		mnExporter.add(mntmBaseDeRgles);
 
-		JMenu mnEdition = new JMenu("Edition");
-		menuBar.add(mnEdition);
+		JMenu mnNouveau = new JMenu("Nouveau");
+		menuBar.add(mnNouveau);
 
-		JMenuItem mntmAjouterFait = new JMenuItem("Ajouter Fait");
-		mntmAjouterFait.addActionListener(new ActionListener() {
+		JMenuItem mntmEffacerBdf = new JMenuItem("Base de Faits");
+		mntmEffacerBdf.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!(JOptionPane.showConfirmDialog(frmSystmeExpert,
+						"Tout le travail non-sauvegardé sera perdu!",
+						"Attention", JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE) == 1)) {
+					SE.getBdf().clear();
+				}
+			}
+		});
+		mnNouveau.add(mntmEffacerBdf);
+
+		JMenuItem mntmEffacerBdr = new JMenuItem("Base de R\u00E8gles");
+		mntmEffacerBdr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!(JOptionPane.showConfirmDialog(frmSystmeExpert,
+						"Tout le travail non-sauvegardé sera perdu!",
+						"Attention", JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
+					SE.getBdr().clear();
+				}
+			}
+		});
+		mnNouveau.add(mntmEffacerBdr);
+
+		JSeparator separator = new JSeparator();
+		mnNouveau.add(separator);
+
+		JMenuItem mntmFait = new JMenuItem("Fait");
+		mntmFait.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SE.getBdf().add(
-						new Fait(JOptionPane.showInputDialog(frame,
+						new Fait(JOptionPane.showInputDialog(frmSystmeExpert,
 								"Nouveau Fait", "nom_du_fait")));
 			}
 		});
-		mnEdition.add(mntmAjouterFait);
+		mnNouveau.add(mntmFait);
 
-		JMenuItem mntmAjouterRgle = new JMenuItem("Ajouter R\u00E8gle");
-		mnEdition.add(mntmAjouterRgle);
+		JMenuItem mntmRegle = new JMenuItem("R\u00E8gle");
+		mntmRegle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		mnNouveau.add(mntmRegle);
 
-		JSeparator separator = new JSeparator();
-		mnEdition.add(separator);
-
-		JMenuItem mntmEffacerBdf = new JMenuItem("Effacer B.D.F.");
-		mnEdition.add(mntmEffacerBdf);
-
-		JMenuItem mntmEffacerBdr = new JMenuItem("Effacer B.D.R.");
-		mnEdition.add(mntmEffacerBdr);
-
-		JMenu mnLancer = new JMenu("Lancer");
-		menuBar.add(mnLancer);
+		JMenu mnExecuter = new JMenu("Ex\u00E9cuter");
+		menuBar.add(mnExecuter);
 
 		JMenuItem mntmChainageAvant = new JMenuItem("Cha\u00EEnage Avant");
 		mntmChainageAvant.addActionListener(new ActionListener() {
@@ -179,21 +207,26 @@ public class Application {
 				SE.chainageAvant();
 			}
 		});
-		mnLancer.add(mntmChainageAvant);
+		mnExecuter.add(mntmChainageAvant);
 
 		JMenuItem mntmChanageArriere = new JMenuItem(
 				"Cha\u00EEnage Arri\u00E8re");
 		mntmChanageArriere.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SE.chainageArriere(JOptionPane.showInputDialog(frame,"Conclusion visée","nom_de_la_conclusion"));
+				if(SE.chainageArriere(JOptionPane.showInputDialog(frmSystmeExpert,
+						"Conclusion visée", "nom_de_la_conclusion"))){
+					JOptionPane.showMessageDialog(frmSystmeExpert, "Chaînage arrière réussi");
+				} else {
+					JOptionPane.showMessageDialog(frmSystmeExpert, "Chaînage arrière échoué");
+				}
 			}
 		});
-		mnLancer.add(mntmChanageArriere);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		mnExecuter.add(mntmChanageArriere);
+		frmSystmeExpert.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new EmptyBorder(10, 20, 20, 20));
-		frame.getContentPane().add(panel);
+		frmSystmeExpert.getContentPane().add(panel);
 		panel.setLayout(new GridLayout(1, 1, 20, 0));
 
 		JPanel panel_1 = new JPanel();
@@ -207,9 +240,7 @@ public class Application {
 		JScrollPane scrollPane = new JScrollPane();
 		panel_1.add(scrollPane, BorderLayout.CENTER);
 
-		tableBDF = new JTable();
-		TableModelBDF modelbdf = new TableModelBDF();
-		tableBDF.setModel(modelbdf);
+		tableBDF = new JTable(new TableModelBDF());
 		scrollPane.setViewportView(tableBDF);
 
 		JPanel panel_2 = new JPanel();
@@ -223,7 +254,7 @@ public class Application {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		panel_2.add(scrollPane_1, BorderLayout.CENTER);
 
-		tableBDR = new JTable();
+		tableBDR = new JTable(new TableModelBDR());
 		scrollPane_1.setViewportView(tableBDR);
 	}
 

@@ -9,7 +9,7 @@ import fr.ecm1A.observer.Observer;
 public class TableModelBDF extends AbstractTableModel implements Observer{
 	
 	private BdFaits bdf;
-	private String[] entetes = {"Nom du fait","Valeur de vérité","Modifier","Supprimer"}; 
+	private String[] entetes = {"Fait","Valeur de vérité","Supprimer"}; 
 	
 	public TableModelBDF(){
 		super();
@@ -36,10 +36,17 @@ public class TableModelBDF extends AbstractTableModel implements Observer{
 			return bdf.get(rowIndex).getVal();
 		case 2:
 			return null;
-		case 3:
-			return null;
 		default:
 			throw new IllegalArgumentException();
+		}
+	}
+	
+	@Override
+	public void setValueAt(Object o, int rowIndex, int columnIndex){
+		if(columnIndex==0){
+			bdf.get(rowIndex).setNom((String)o);
+		} else if(columnIndex==1){
+			bdf.get(rowIndex).setVal((Boolean)o);
 		}
 	}
 
@@ -52,8 +59,6 @@ public class TableModelBDF extends AbstractTableModel implements Observer{
 			return Boolean.class;
 		case 2:
 			return String.class;
-		case 3:
-			return String.class;
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -62,6 +67,11 @@ public class TableModelBDF extends AbstractTableModel implements Observer{
 	@Override
 	public String getColumnName(int columnIndex) {
 		return entetes[columnIndex];
+	}
+
+	@Override
+	public boolean isCellEditable(int rowIndex,int columnIndex) {
+		return columnIndex<=1;
 	}
 
 

@@ -8,10 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import fr.ecm1A.observer.Observable;
-
 @SuppressWarnings("serial")
-public class BdRegles extends ALObservable<Regle> implements Observable{
+public class BdRegles extends ALObservable<Regle>{
 	
 	public BdRegles(){}
 	
@@ -26,12 +24,15 @@ public class BdRegles extends ALObservable<Regle> implements Observable{
 	public void open(String chemin) {
 		File save = new File(chemin);
 		BufferedReader bfr = null;
+		this.clear();
+		
 		try {
 			bfr = new BufferedReader(new FileReader(save));
 			String[] lecture = new String[2];
 			do{
-				lecture = (new String(bfr.readLine())).split(";");
-				if(lecture != null){
+				lecture[0] = (bfr.readLine());
+				if(lecture[0] != null){
+					lecture= lecture[0].split(";");
 					Conditions cond = new Conditions();
 					for (String x : lecture[0].split(",")){
 						cond.add(x);
@@ -39,7 +40,7 @@ public class BdRegles extends ALObservable<Regle> implements Observable{
 					Regle x = new Regle(cond,new String(lecture[1]));
 					this.add(x);
 				}
-			}while(lecture != null);
+			}while(lecture[0] != null);
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -69,7 +70,7 @@ public class BdRegles extends ALObservable<Regle> implements Observable{
 			for (String y : x.getConditions()){
 				temp += y + ",";
 			}
-			temp+=";" + x.getConclusion();
+			temp+=";" + x.getConclusion()+"\n";
 			bfw.write(temp);
 		}
 		} catch (IOException e) {
