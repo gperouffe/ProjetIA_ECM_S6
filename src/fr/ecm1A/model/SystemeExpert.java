@@ -10,14 +10,14 @@ public class SystemeExpert {
 		bdf = new BdFaits();
 		bdr = new BdRegles();
 	}
-	
-	public static SystemeExpert getInstance(){
-		if (instance ==null){
+
+	public static SystemeExpert getInstance() {
+		if (instance == null) {
 			instance = new SystemeExpert();
 		}
 		return instance;
 	}
-	
+
 	public BdFaits getBdf() {
 		return bdf;
 	}
@@ -71,9 +71,11 @@ public class SystemeExpert {
 	public Boolean chainageArriere(String but) {
 		Boolean succes = false;
 		Fait faitBut = bdf.find(but);
-		if (faitBut == null) {
+		if (faitBut == null && !but.equals("")) {
 			faitBut = new Fait(but);
 			bdf.add(faitBut);
+		} else if (but.equals("")) {
+			return false;
 		}
 		if (faitBut.getVal()) {
 			return true;
@@ -114,5 +116,4 @@ public class SystemeExpert {
 		}
 
 	}
-
 }

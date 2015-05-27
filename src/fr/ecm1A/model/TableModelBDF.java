@@ -6,14 +6,14 @@ import fr.ecm1A.observer.Observable;
 import fr.ecm1A.observer.Observer;
 
 @SuppressWarnings("serial")
-public class TableModelBDF extends AbstractTableModel implements Observer{
-	
+public class TableModelBDF extends AbstractTableModel implements Observer {
+
 	private BdFaits bdf;
-	private String[] entetes = {"Fait","Valeur de vérité","Supprimer"}; 
-	
-	public TableModelBDF(){
+	private String[] entetes = { "Fait", "Valeur de vérité", "Supprimer" };
+
+	public TableModelBDF() {
 		super();
-		this.bdf=SystemeExpert.getInstance().getBdf();
+		this.bdf = SystemeExpert.getInstance().getBdf();
 		bdf.addObserver(this);
 	}
 
@@ -29,36 +29,39 @@ public class TableModelBDF extends AbstractTableModel implements Observer{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		switch(columnIndex){
+		switch (columnIndex) {
 		case 0:
 			return bdf.get(rowIndex).getNom();
 		case 1:
 			return bdf.get(rowIndex).getVal();
 		case 2:
-			return null;
+			return false;
 		default:
 			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	@Override
-	public void setValueAt(Object o, int rowIndex, int columnIndex){
-		if(columnIndex==0){
-			bdf.get(rowIndex).setNom((String)o);
-		} else if(columnIndex==1){
-			bdf.get(rowIndex).setVal((Boolean)o);
+	public void setValueAt(Object o, int rowIndex, int columnIndex) {
+		if (columnIndex == 0) {
+			bdf.get(rowIndex).setNom((String) o);
+		} else if (columnIndex == 1) {
+			bdf.get(rowIndex).setVal((Boolean) o);
+		} else if (columnIndex == 2) {
+			bdf.remove(rowIndex);
 		}
+		fireTableDataChanged();
 	}
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		switch(columnIndex){
+		switch (columnIndex) {
 		case 0:
 			return String.class;
 		case 1:
 			return Boolean.class;
 		case 2:
-			return String.class;
+			return Boolean.class;
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -70,18 +73,15 @@ public class TableModelBDF extends AbstractTableModel implements Observer{
 	}
 
 	@Override
-	public boolean isCellEditable(int rowIndex,int columnIndex) {
-		return columnIndex<=1;
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return true;
 	}
-
 
 	@Override
 	public void update(Observable obs) {
-		if(obs instanceof BdFaits){
+		if (obs==bdf) {
 			fireTableDataChanged();
 		}
 	}
-	
-	
-}
 
+}

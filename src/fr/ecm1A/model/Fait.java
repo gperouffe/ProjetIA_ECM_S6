@@ -1,14 +1,14 @@
 package fr.ecm1A.model;
 
 public class Fait {
-	
+
 	private String nom;
 	private Boolean val;
 
-	public Fait (String nom){
-		this.nom=nom;
-		this.val=false;
-		
+	public Fait(String nom) {
+		this.nom = nom;
+		this.val = false;
+
 	}
 
 	public String getNom() {
@@ -26,11 +26,11 @@ public class Fait {
 	public void setVal(Boolean val) {
 		this.val = val;
 	}
-	
+
 	public void valider() {
 		this.val = true;
 	}
-	
+
 	public String toString() {
 		return this.nom;
 	}
