@@ -51,10 +51,12 @@ public class SystemeExpert {
 					if (conclFait == null) {
 						conclFait = new Fait(r.getConclusion());
 						conclFait.valider();
+						conclFait.setModified(true);
 						bdf.add(conclFait);
 					}
 					if (!conclFait.getVal()) {
 						conclFait.valider();
+						conclFait.setModified(true);
 						bdf.notifyObservers();
 						saturation = false;
 					}
@@ -71,7 +73,10 @@ public class SystemeExpert {
 	public Boolean chainageArriere(String but) {
 		Boolean succes = false;
 		Fait faitBut = bdf.find(but);
-		if (faitBut == null && !but.equals("")) {
+		if (but == null || but.equals("")){
+			return false;
+		}
+		if (faitBut == null) {
 			faitBut = new Fait(but);
 			bdf.add(faitBut);
 		} else if (but.equals("")) {
@@ -109,6 +114,7 @@ public class SystemeExpert {
 			}
 			if (succes) {
 				faitBut.valider();
+				faitBut.setModified(true);
 				bdf.notifyObservers();
 				return true;
 			} else

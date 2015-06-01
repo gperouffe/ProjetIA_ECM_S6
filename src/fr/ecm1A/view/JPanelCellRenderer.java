@@ -16,7 +16,9 @@ public class JPanelCellRenderer extends DefaultTableCellRenderer {
 			if (pan.getPreferredSize().height > 0)
 				table.setRowHeight(row, pan.getPreferredSize().height);
 			return pan;
-		} else
-			return this;
+		} else {
+			return super.getTableCellRendererComponent(table, value,
+					isSelected, hasFocus, row, column);
+		}
 	}
 }

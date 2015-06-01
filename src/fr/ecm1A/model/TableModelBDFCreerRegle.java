@@ -18,18 +18,49 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 	private Regle regle;
 	private int indexCcl;
 
-	public TableModelBDFCreerRegle(Regle regle) {
+	public TableModelBDFCreerRegle() {
 		super();
-		this.regle = regle;
+		this.regle = new Regle();
 		this.bdf = SystemeExpert.getInstance().getBdf();
 		this.bdf.addObserver(this);
 		selectionCond = new ArrayList<Integer>();
 		indexCcl = -1;
 	}
+	
+	public void setRegle(Regle regle){
+		reset();
+		this.regle = regle;
+		for(String x : regle.getConditions()){
+			Fait rech = bdf.find(x);
+			if(!x.equals("")&&rech==null){
+				Fait nvFait = new Fait(x);
+				bdf.add(nvFait);
+			}
+		}
+		for(String x : regle.getConditions()){
+			Fait rech = bdf.find(x);
+			if(!x.equals("")&&rech!=null){ 
+				selectionCond.add((Integer)bdf.indexOf(rech));	
+			}
+			
+		}
+		String ccl = regle.getConclusion();
+		Fait rech = bdf.find(ccl);
+		if(rech!=null&&ccl!=""){
+			indexCcl = bdf.indexOf(rech);
+		} else if (ccl!="") {
+			Fait nvFait = new Fait(ccl);
+			bdf.add(nvFait);
+			indexCcl = bdf.indexOf(nvFait);
+		}
+		fireTableDataChanged();
+		notifyObservers();
+	}
 
 	public void reset() {
-		selectionCond = new ArrayList<Integer>();
+		selectionCond.clear();
 		indexCcl = -1;
+		regle = new Regle();
 		fireTableDataChanged();
 		notifyObservers();
 	}
@@ -126,8 +157,7 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 		if (obs==bdf) {
 			selectionCond.clear();
 			indexCcl = -1;
-			regle.getConditions().clear();
-			regle.setConclusion("");
+			setRegle(regle);
 			fireTableDataChanged();
 			notifyObservers();
 		}

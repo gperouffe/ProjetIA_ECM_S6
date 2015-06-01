@@ -4,10 +4,12 @@ public class Fait {
 
 	private String nom;
 	private Boolean val;
+	private Boolean modified;
 
 	public Fait(String nom) {
 		this.nom = nom;
 		this.val = false;
+		this.modified = false;
 
 	}
 
@@ -25,6 +27,14 @@ public class Fait {
 
 	public void setVal(Boolean val) {
 		this.val = val;
+	}
+
+	public Boolean getModified() {
+		return modified;
+	}
+
+	public void setModified(Boolean modified) {
+		this.modified = modified;
 	}
 
 	public void valider() {

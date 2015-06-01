@@ -1,5 +1,7 @@
 package fr.ecm1A.model;
 
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.table.AbstractTableModel;
 
@@ -7,11 +9,13 @@ import fr.ecm1A.observer.Observable;
 import fr.ecm1A.observer.Observer;
 
 @SuppressWarnings("serial")
-public class TableModelBDR extends AbstractTableModel implements Observer {
+public class TableModelBDR extends AbstractTableModel implements Observer, Observable{
 
 	private BdRegles bdr;
 	private String[] entetes = { "Conditions", "Conclusion", "Modifier",
 			"Supprimer" };
+	private ArrayList<Observer> listObs = new ArrayList<Observer>();
+	private int indexRegleAModif;
 
 	public TableModelBDR() {
 		super();
@@ -48,7 +52,11 @@ public class TableModelBDR extends AbstractTableModel implements Observer {
 
 	@Override
 	public void setValueAt(Object o, int rowIndex, int columnIndex) {
-		if (columnIndex == 3) {
+		if (columnIndex == 2) {
+			indexRegleAModif = rowIndex;
+			notifyObservers();
+			indexRegleAModif = -1;
+		} else if (columnIndex == 3) {
 			bdr.remove(rowIndex);
 		}
 		fireTableDataChanged();
@@ -80,11 +88,33 @@ public class TableModelBDR extends AbstractTableModel implements Observer {
 		return entetes[columnIndex];
 	}
 
+	public int getIndexRegleAModif() {
+		return indexRegleAModif;
+	}
+
 	@Override
 	public void update(Observable obs) {
-		if (obs==bdr) {
+		if (obs == bdr) {
 			fireTableDataChanged();
 		}
 	}
 
+	@Override
+	public void addObserver(Observer obs) {
+		if (!listObs.contains(obs)) {
+			listObs.add(obs);
+		}
+	}
+
+	@Override
+	public void removeObserver(Observer obs) {
+		listObs.remove(obs);
+	}
+
+	@Override
+	public void notifyObservers() {
+		for (Observer obs : listObs) {
+			obs.update(this);
+		}
+	}
 }

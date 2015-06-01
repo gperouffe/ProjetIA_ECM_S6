@@ -45,12 +45,14 @@ public class TableModelBDF extends AbstractTableModel implements Observer {
 	public void setValueAt(Object o, int rowIndex, int columnIndex) {
 		if (columnIndex == 0) {
 			bdf.get(rowIndex).setNom((String) o);
+			fireTableCellUpdated(rowIndex,columnIndex);
 		} else if (columnIndex == 1) {
 			bdf.get(rowIndex).setVal((Boolean) o);
+			fireTableCellUpdated(rowIndex,columnIndex);
 		} else if (columnIndex == 2) {
 			bdf.remove(rowIndex);
+			fireTableRowsDeleted(rowIndex,rowIndex);
 		}
-		fireTableDataChanged();
 	}
 
 	@Override
