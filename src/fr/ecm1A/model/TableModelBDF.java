@@ -51,7 +51,6 @@ public class TableModelBDF extends AbstractTableModel implements Observer {
 			fireTableCellUpdated(rowIndex,columnIndex);
 		} else if (columnIndex == 2) {
 			bdf.remove(rowIndex);
-			fireTableRowsDeleted(rowIndex,rowIndex);
 		}
 	}
 

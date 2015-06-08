@@ -108,7 +108,9 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 					regle.getConditions().add(bdf.get(rowIndex).getNom());
 				}
 			}
+			fireTableCellUpdated(rowIndex,columnIndex);
 		} else if (columnIndex == 2) {
+			int tempCcl = indexCcl;
 			if (!selectionCond.contains(rowIndex) && ((Boolean) o)) {
 				regle.setConclusion(bdf.get(rowIndex).getNom());
 				indexCcl = rowIndex;
@@ -121,10 +123,13 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 				regle.setConclusion("");
 				indexCcl = -1;
 			}
+			if ( tempCcl != -1) {
+				fireTableCellUpdated(tempCcl,2);
+			}
 		} else {
 			throw new IllegalArgumentException();
 		}
-		fireTableDataChanged();
+		fireTableRowsUpdated(rowIndex,rowIndex);
 		notifyObservers();
 	}
 
@@ -157,10 +162,36 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 		if (obs==bdf) {
 			selectionCond.clear();
 			indexCcl = -1;
-			setRegle(regle);
+			updateRegle();
 			fireTableDataChanged();
 			notifyObservers();
 		}
+	}
+
+	private void updateRegle() {
+		selectionCond.clear();
+		indexCcl = -1;
+		ArrayList<String> aSupprimer = new ArrayList<String>();
+		for(String x : regle.getConditions()){
+			Fait rech = bdf.find(x);
+			if(!x.equals("")&&rech!=null){ 
+				selectionCond.add((Integer)bdf.indexOf(rech));	
+			} else {
+				aSupprimer.add(x);
+			}
+		}
+		for(String s : aSupprimer){
+			regle.getConditions().remove(s);
+		}
+		String ccl = regle.getConclusion();
+		Fait rech = bdf.find(ccl);
+		if(rech!=null&&ccl!=""){
+			indexCcl = bdf.indexOf(rech);
+		} else {
+			regle.setConclusion("");
+		}
+		fireTableDataChanged();
+		notifyObservers();
 	}
 
 	public Regle getRegle() {

@@ -21,4 +21,10 @@
 			<locationURI>PROJECT_LOC/lib/org.eclipse.swt_3.103.2.v20150203-1313.jar</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>ressources</name>
+			<value>file:/C:/Users/Guillaume/Documents/GitHub/ProjetIA_ECM_S6/ressources</value>
+		</variable>
+	</variableList>
 </projectDescription>

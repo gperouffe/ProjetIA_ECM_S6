@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -48,8 +49,8 @@ public class RegleDialog extends JDialog {
 		regleTemp = regle;
 		setTitle("Editeur de R\u00E8gles");
 		setLocation(owner.getLocation());
-		int hauteur = owner.getHeight() * 93 / 100;
-		int largeur = owner.getWidth() * 2 / 3;
+		int hauteur = owner.getHeight();
+		int largeur = owner.getWidth() / 2;
 		setSize(new Dimension(largeur, hauteur));
 		BorderLayout borderLayout = new BorderLayout();
 		getContentPane().setLayout(borderLayout);
@@ -61,14 +62,24 @@ public class RegleDialog extends JDialog {
 				tableModel);
 		sorter.toggleSortOrder(0);
 
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setResizeWeight(0.65);
+		contentPanel.add(splitPane, BorderLayout.CENTER);
+
+		JPanel panel_4 = new JPanel();
+		splitPane.setLeftComponent(panel_4);
+		panel_4.setLayout(new BorderLayout(0, 0));
+
 		JPanel panel_2 = new JPanel();
-		contentPanel.add(panel_2, BorderLayout.CENTER);
+		panel_4.add(panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
 
 		JScrollPane scrollPane = new JScrollPane();
 		panel_2.add(scrollPane);
 
 		condTable = new JTable(tableModel);
+		condTable
+				.setToolTipText("<html> Base de fait utilisable pour cr\u00E9er les r\u00E8gles. <br><br>\r\n(Clic simple pour ajouter une condition)<br>\r\n(Clic simple pour ajouter une conclusion)");
 		condTable.getColumnModel().getColumn(2).setPreferredWidth(1);
 		condTable.getColumnModel().getColumn(1).setPreferredWidth(1);
 		condTable.setRowSorter(sorter);
@@ -79,12 +90,15 @@ public class RegleDialog extends JDialog {
 		panel_3.setLayout(new GridLayout(1, 0, 0, 0));
 
 		txtNouveauFait = new JTextField();
+		txtNouveauFait
+				.setToolTipText("Indiquer le nom du fait puis appuyer sur Entr\u00E9e pour l'ajouter");
 		txtNouveauFait.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER)
 					if (!txtNouveauFait.getText().equals("")) {
-						SystemeExpert.getInstance().getBdf().add(new Fait(txtNouveauFait.getText()));
+						SystemeExpert.getInstance().getBdf()
+								.add(new Fait(txtNouveauFait.getText()));
 						txtNouveauFait.setText("");
 					}
 			}
@@ -109,31 +123,50 @@ public class RegleDialog extends JDialog {
 		txtRechercher.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				RowFilter<TableModelBDFCreerRegle, Integer> filter = RowFilter
-						.regexFilter(".*(?i)(?U)^" + txtRechercher.getText()
-								+ ".*");
+				RowFilter<TableModelBDFCreerRegle, Integer> filter = new RowFilter<TableModelBDFCreerRegle,Integer>(){
+
+					@Override
+					public boolean include(Entry<? extends TableModelBDFCreerRegle, ? extends Integer> entry) {
+						TableModelBDFCreerRegle model = entry.getModel();
+						String s = (String) model.getValueAt(entry.getIdentifier(), 0);
+						if (s.toLowerCase().startsWith(txtRechercher.getText().toLowerCase())){
+							return true;
+						} else {
+							return false;
+						}
+					}
+					
+				};
 				sorter.setRowFilter(filter);
 			}
 		});
 		txtRechercher.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				txtRechercher.setText("");
+				if (txtRechercher.getText().equals("Rechercher")){
+					txtRechercher.setText("");
+				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				txtRechercher.setText("Recherche");
+				if (txtRechercher.getText().equals("")){
+					txtRechercher.setText("Rechercher");
+					sorter.setRowFilter(null);
+				}
 			}
 		});
 		txtRechercher.setText("Rechercher");
 		txtRechercher.setColumns(10);
 
-		JScrollPane scrollPane1 = new JScrollPane();
-		contentPanel.add(scrollPane1, BorderLayout.EAST);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane.setPreferredSize(new Dimension(0,0));
+		splitPane.setRightComponent(scrollPane_1);
 
 		PrevisuRegle previsuRegle = new PrevisuRegle(tableModel);
-		scrollPane1.setViewportView(previsuRegle);
+		previsuRegle
+				.setToolTipText("R\u00E8gle en cours de cr\u00E9ation.\r\n");
+		scrollPane_1.setViewportView(previsuRegle);
 
 		JPanel buttonPane = new JPanel();
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -145,7 +178,8 @@ public class RegleDialog extends JDialog {
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		buttonPane.add(panel_1);
 
-		JButton btnEffacerSelec = new JButton("Effacer S\u00E9lection");
+		JButton btnEffacerSelec = new JButton("Effacer la s\u00E9lection");
+		btnEffacerSelec.setToolTipText("Efface la s\u00E9lection en cours.");
 		btnEffacerSelec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				tableModel.reset();
@@ -158,6 +192,7 @@ public class RegleDialog extends JDialog {
 		flowLayout1.setAlignment(FlowLayout.RIGHT);
 		buttonPane.add(panel);
 		JButton okButton = new JButton("Enregistrer");
+		okButton.setToolTipText("Ajoute la r\u00E8gle \u00E0 la Base de R\u00E8gle.\r\n\r\n");
 		panel.add(okButton);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -189,11 +224,17 @@ public class RegleDialog extends JDialog {
 		panel.add(cancelButton);
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				tableModel.reset();
 				setVisible(false);
 				dispose();
 			}
 		});
+
+	}
+
+	@Override
+	public void dispose() {
+		tableModel.reset();
+		super.dispose();
 
 	}
 
@@ -206,7 +247,7 @@ public class RegleDialog extends JDialog {
 	public static void showDialog(JFrame owner) {
 		if (RD == null || !RD.isVisible()) {
 			RD = new RegleDialog(owner, new Regle());
-			RD.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			RD.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			RD.setVisible(true);
 		}
 	}
@@ -214,7 +255,7 @@ public class RegleDialog extends JDialog {
 	public static void showDialog(JFrame owner, Regle regle) {
 		if (RD == null) {
 			RD = new RegleDialog(owner, regle);
-			RD.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			RD.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			RD.setVisible(true);
 		} else if (!RD.isVisible()) {
 			RD.chargerRegle(regle);

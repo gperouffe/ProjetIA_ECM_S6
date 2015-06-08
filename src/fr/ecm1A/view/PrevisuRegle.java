@@ -22,5 +22,4 @@ public class PrevisuRegle extends JTextPane implements Observer {
 			this.setText(((TableModelBDFCreerRegle) obs).getRegle().toString());
 		}
 	}
-
 }

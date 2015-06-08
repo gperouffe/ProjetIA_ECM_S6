@@ -35,7 +35,7 @@ public class Regle {
 	@Override
 	public String toString() {
 		String str = new String();
-		str = "SI :                                  \r\n";
+		str = "SI :\r\n";
 		for (String s : conditions) {
 			str += s + "\r\n";
 		}

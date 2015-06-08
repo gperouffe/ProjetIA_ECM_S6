@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -56,8 +59,8 @@ public class Application implements Observer {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					Application window = new Application();
-					window.frmSystmeExpert.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -77,13 +80,20 @@ public class Application implements Observer {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		Image img = null;
+		try {
+			img = ImageIO.read(getClass().getResource("/SourisMOPT.png"));
+		} catch (IOException e){
+			e.printStackTrace();
+		}
 		frmSystmeExpert = new JFrame();
+		frmSystmeExpert.setIconImage(img);
 		frmSystmeExpert.setTitle("Syst\u00E8me Expert");
 		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment
 				.getLocalGraphicsEnvironment();
 		Rectangle tailleEcran = graphicsEnvironment.getMaximumWindowBounds();
-		int hauteur = 640;
-		int largeur = hauteur * 4 / 3;
+		int hauteur = (int) (tailleEcran.height * 0.8) ;
+		int largeur = hauteur * 4/3;
 		int posX = (int) tailleEcran.getWidth() / 2 - largeur / 2;
 		int posY = (int) tailleEcran.getHeight() / 2 - hauteur / 2;
 		frmSystmeExpert.setMinimumSize(new Dimension(largeur, hauteur));
@@ -178,7 +188,7 @@ public class Application implements Observer {
 		mntmEffacerBdf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if ((JOptionPane.showConfirmDialog(frmSystmeExpert,
-						"Tout le travail non-sauvegardé sera perdu!",
+						"Tout le travail non sauvegardé sera perdu!",
 						"Attention", JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
 					SE.getBdf().clear();
@@ -191,7 +201,7 @@ public class Application implements Observer {
 		mntmEffacerBdr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if ((JOptionPane.showConfirmDialog(frmSystmeExpert,
-						"Tout le travail non-sauvegardé sera perdu!",
+						"Tout le travail non sauvegardé sera perdu!",
 						"Attention", JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.WARNING_MESSAGE) == JOptionPane.OK_OPTION)) {
 					SE.getBdr().clear();
@@ -261,6 +271,7 @@ public class Application implements Observer {
 
 		TableModelBDF tableModelBDF = new TableModelBDF();
 		tableBDF = new JTable(tableModelBDF);
+		tableBDF.setToolTipText("<html>Etat courant de la base de fait. <br> <br>\r\n(Double-clic pour modifier le nom) <br>\r\n(Clic simple pour modifier la valeur de v\u00E9rit\u00E9) <br>\r\n(Clic simple pour supprimer)");
 		tableBDF.getColumnModel().getColumn(2).setPreferredWidth(1);
 		tableBDF.getColumnModel().getColumn(1).setPreferredWidth(1);
 		TableRowSorter<TableModelBDF> sorter = new TableRowSorter<TableModelBDF>(
@@ -271,7 +282,7 @@ public class Application implements Observer {
 
 		JPanel panel_3 = new JPanel();
 		panel_1.add(panel_3, BorderLayout.SOUTH);
-		panel_3.setLayout(new GridLayout(0, 1, 0, 0));
+		panel_3.setLayout(new GridLayout(1, 1, 0, 0));
 
 		txtNouveaufait = new JTextField("Nouveau fait");
 		txtNouveaufait.addFocusListener(new FocusAdapter() {
@@ -299,6 +310,19 @@ public class Application implements Observer {
 		});
 		panel_3.add(txtNouveaufait);
 		txtNouveaufait.setColumns(10);
+		
+		JButton btnRemiseAZero = new JButton("Remise à zéro");
+		btnRemiseAZero.setToolTipText("Passe tous les faits à la valeur \"faux\"");
+		btnRemiseAZero.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for(Fait f : SE.getBdf()){
+					f.setVal(false);
+				}
+				SE.getBdf().notifyObservers();
+			}
+		});
+		btnRemiseAZero.setPreferredSize(txtNouveaufait.getPreferredSize());
+		panel_3.add(btnRemiseAZero);
 
 		JPanel panel_2 = new JPanel();
 		panel.add(panel_2);
@@ -318,6 +342,7 @@ public class Application implements Observer {
 		TableModelBDR tableModelBdr = new TableModelBDR();
 		tableModelBdr.addObserver(this);
 		tableBDR = new JTable(tableModelBdr);
+		tableBDR.setToolTipText("<html>Inventaire des r\u00E8gles cr\u00E9\u00E9es.<br><br>\r\n(Clic simple pour modifier)<br>\r\n(Clic simple pour supprimer)</html>\r\n");
 		tableBDR.getColumnModel().getColumn(3).setPreferredWidth(1);
 		tableBDR.getColumnModel().getColumn(2).setPreferredWidth(1);
 		TableRowSorter<TableModelBDR> sorter2 = new TableRowSorter<TableModelBDR>(
@@ -329,6 +354,7 @@ public class Application implements Observer {
 		scrollPane_1.setViewportView(tableBDR);
 
 		JButton btnCrerRgle = new JButton("Cr\u00E9er R\u00E8gle");
+		btnCrerRgle.setToolTipText("Appuyez pour ouvrir l'\u00E9diteur de r\u00E8gle");
 		btnCrerRgle.setPreferredSize(new Dimension(txtNouveaufait
 				.getPreferredSize()));
 		btnCrerRgle.addActionListener(new ActionListener() {
@@ -342,20 +368,36 @@ public class Application implements Observer {
 		txtRechercher.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtRechercher.setText("");
+				if (txtRechercher.getText().equals("Rechercher")){
+					txtRechercher.setText("");
+				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				txtRechercher.setText("Rechercher");
+				if (txtRechercher.getText().equals("")){
+					txtRechercher.setText("Rechercher");
+					sorter.setRowFilter(null);
+				}
 			}
 		});
 		txtRechercher.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				RowFilter<TableModelBDF, Integer> filter = RowFilter
-						.regexFilter(".*(?i)(?U)^(" + txtRechercher.getText()
-								+ ").*");
+				RowFilter<TableModelBDF, Integer> filter = new RowFilter<TableModelBDF,Integer>(){
+
+					@Override
+					public boolean include(Entry<? extends TableModelBDF, ? extends Integer> entry) {
+						TableModelBDF model = entry.getModel();
+						String s = (String) model.getValueAt(entry.getIdentifier(), 0);
+						if (s.toLowerCase().startsWith(txtRechercher.getText().toLowerCase())){
+							return true;
+						} else {
+							return false;
+						}
+					}
+					
+				};
 				sorter.setRowFilter(filter);
 			}
 		});
@@ -366,25 +408,44 @@ public class Application implements Observer {
 		txtRechercher_1.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtRechercher_1.setText("");
+				if (txtRechercher_1.getText().equals("Rechercher")){
+					txtRechercher_1.setText("");
+				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				txtRechercher_1.setText("Rechercher");
+				if (txtRechercher_1.getText().equals("")){
+					txtRechercher_1.setText("Rechercher");
+					sorter2.setRowFilter(null);
+				}
 			}
 		});
 		txtRechercher_1.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				RowFilter<TableModelBDR, Integer> filter2 = RowFilter
-						.regexFilter(".*(?i)(?U)^(" + txtRechercher_1.getText()
-								+ ").*");
+				RowFilter<TableModelBDR, Integer> filter2 = new RowFilter<TableModelBDR,Integer>(){
+
+					@Override
+					public boolean include(Entry<? extends TableModelBDR, ? extends Integer> entry) {
+						TableModelBDR model = entry.getModel();
+						String s = (String) model.getValueAt(entry.getIdentifier(), 1);
+						if (s.toLowerCase().startsWith(txtRechercher_1.getText().toLowerCase())){
+							return true;
+						} else {
+							return false;
+						}
+					}
+				};
 				sorter2.setRowFilter(filter2);
 			}
 		});
 		panel_5.add(txtRechercher_1);
 		txtRechercher_1.setColumns(10);
+
+		frmSystmeExpert.setVisible(true);
+		btnCrerRgle.requestFocusInWindow();
+		
 	}
 
 	@Override
