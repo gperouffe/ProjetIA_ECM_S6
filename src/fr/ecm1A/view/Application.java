@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -105,12 +106,16 @@ public class Application implements Observer {
 		frmSystmeExpert.setJMenuBar(menuBar);
 
 		JMenu mnFichier = new JMenu("Fichier");
+		mnFichier.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(mnFichier);
 
 		JMenu mnImporter = new JMenu("Ouvrir");
+		mnImporter.setMnemonic(KeyEvent.VK_O);
 		mnFichier.add(mnImporter);
 
 		JMenuItem mntmBaseDeFaits_1 = new JMenuItem("Base de Faits");
+		mntmBaseDeFaits_1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
+		mntmBaseDeFaits_1.setMnemonic(KeyEvent.VK_F);
 		mntmBaseDeFaits_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser jfc = new JFileChooser();
@@ -128,6 +133,8 @@ public class Application implements Observer {
 		mnImporter.add(mntmBaseDeFaits_1);
 
 		JMenuItem mntmBaseDeRgles_1 = new JMenuItem("Base de R\u00E8gles");
+		mntmBaseDeRgles_1.setMnemonic(KeyEvent.VK_R);
+		mntmBaseDeRgles_1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
 		mntmBaseDeRgles_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser jfc = new JFileChooser();
@@ -145,9 +152,12 @@ public class Application implements Observer {
 		mnImporter.add(mntmBaseDeRgles_1);
 
 		JMenu mnExporter = new JMenu("Enregistrer");
+		mnExporter.setMnemonic(KeyEvent.VK_E);
 		mnFichier.add(mnExporter);
 
 		JMenuItem mntmBaseDeFaits = new JMenuItem("Base de Faits");
+		mntmBaseDeFaits.setMnemonic(KeyEvent.VK_F);
+		mntmBaseDeFaits.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
 		mntmBaseDeFaits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jfc = new JFileChooser();
@@ -165,6 +175,8 @@ public class Application implements Observer {
 		mnExporter.add(mntmBaseDeFaits);
 
 		JMenuItem mntmBaseDeRgles = new JMenuItem("Base de R\u00E8gles");
+		mntmBaseDeRgles.setMnemonic(KeyEvent.VK_R);
+		mntmBaseDeRgles.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
 		mntmBaseDeRgles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jfc = new JFileChooser();
@@ -181,10 +193,13 @@ public class Application implements Observer {
 		});
 		mnExporter.add(mntmBaseDeRgles);
 
-		JMenu mnNouveau = new JMenu("R\u00E9initialiser");
-		menuBar.add(mnNouveau);
-
+		JMenu mnReset = new JMenu("R\u00E9initialiser");
+		mnReset.setMnemonic(KeyEvent.VK_R);
+		menuBar.add(mnReset);
+		
 		JMenuItem mntmEffacerBdf = new JMenuItem("Base de Faits");
+		mntmEffacerBdf.setMnemonic(KeyEvent.VK_F);
+		mntmEffacerBdf.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,ActionEvent.CTRL_MASK));
 		mntmEffacerBdf.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if ((JOptionPane.showConfirmDialog(frmSystmeExpert,
@@ -195,9 +210,11 @@ public class Application implements Observer {
 				}
 			}
 		});
-		mnNouveau.add(mntmEffacerBdf);
+		mnReset.add(mntmEffacerBdf);
 
 		JMenuItem mntmEffacerBdr = new JMenuItem("Base de R\u00E8gles");
+		mntmEffacerBdr.setMnemonic(KeyEvent.VK_R);
+		mntmEffacerBdr.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
 		mntmEffacerBdr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if ((JOptionPane.showConfirmDialog(frmSystmeExpert,
@@ -208,41 +225,35 @@ public class Application implements Observer {
 				}
 			}
 		});
-		mnNouveau.add(mntmEffacerBdr);
+		mnReset.add(mntmEffacerBdr);
 
 		JMenu mnExecuter = new JMenu("Ex\u00E9cuter");
+		mnExecuter.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(mnExecuter);
 
 		JMenuItem mntmChainageAvant = new JMenuItem("Cha\u00EEnage Avant");
+		mntmChainageAvant.setMnemonic(KeyEvent.VK_V);
+		mntmChainageAvant.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,ActionEvent.CTRL_MASK));
 		mntmChainageAvant.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SE.chainageAvant();
-				String msg = SE.getBdf().getModified();
-				if (msg.equals("")) {
-					JOptionPane.showMessageDialog(frmSystmeExpert,
-							"Aucun fait n'a pu être déduit.");
-				} else {
-					JOptionPane.showMessageDialog(frmSystmeExpert,
-							"Certains faits ont été déduits : " + msg);
-				}
+				ExplicationDialog.showDialog(frmSystmeExpert,SE.getLog());
 			}
 		});
 		mnExecuter.add(mntmChainageAvant);
 
 		JMenuItem mntmChanageArriere = new JMenuItem(
 				"Cha\u00EEnage Arri\u00E8re");
+		mntmChanageArriere.setMnemonic(KeyEvent.VK_R);
+		mntmChanageArriere.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,ActionEvent.CTRL_MASK+ActionEvent.SHIFT_MASK));
 		mntmChanageArriere.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (SE.chainageArriere(JOptionPane.showInputDialog(
 						frmSystmeExpert, "Conclusion visée",
 						"nom_de_la_conclusion"))) {
-					String msg = SE.getBdf().getModified();
-					JOptionPane.showMessageDialog(frmSystmeExpert,
-							"Chaînage arrière réussi, certains faits ont été déduits : "
-									+ msg);
+					ExplicationDialog.showDialog(frmSystmeExpert,SE.getLog());
 				} else {
-					JOptionPane.showMessageDialog(frmSystmeExpert,
-							"Echec du chaînage arrière.");
+					JOptionPane.showMessageDialog(frmSystmeExpert, "Echec du chaînage arrière.");
 				}
 			}
 		});

@@ -12,6 +12,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableRowSorter;
@@ -35,6 +37,7 @@ public class RegleDialog extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable condTable;
 	private Regle regleTemp;
+	private Regle regleSave;
 	private TableModelBDFCreerRegle tableModel;
 	private static RegleDialog RD;
 	private JTextField txtRechercher;
@@ -44,9 +47,9 @@ public class RegleDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	private RegleDialog(JFrame owner, Regle regle) {
+	private RegleDialog(JFrame owner) {
 		super(owner, false);
-		regleTemp = regle;
+		regleTemp = new Regle();
 		setTitle("Editeur de R\u00E8gles");
 		setLocation(owner.getLocation());
 		int hauteur = owner.getHeight();
@@ -57,6 +60,19 @@ public class RegleDialog extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
+
+		ActionListener escapeClose = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+
+		};
+		getRootPane().registerKeyboardAction(escapeClose,
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+
 		tableModel = new TableModelBDFCreerRegle();
 		TableRowSorter<TableModelBDFCreerRegle> sorter = new TableRowSorter<TableModelBDFCreerRegle>(
 				tableModel);
@@ -123,19 +139,22 @@ public class RegleDialog extends JDialog {
 		txtRechercher.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				RowFilter<TableModelBDFCreerRegle, Integer> filter = new RowFilter<TableModelBDFCreerRegle,Integer>(){
+				RowFilter<TableModelBDFCreerRegle, Integer> filter = new RowFilter<TableModelBDFCreerRegle, Integer>() {
 
 					@Override
-					public boolean include(Entry<? extends TableModelBDFCreerRegle, ? extends Integer> entry) {
+					public boolean include(
+							Entry<? extends TableModelBDFCreerRegle, ? extends Integer> entry) {
 						TableModelBDFCreerRegle model = entry.getModel();
-						String s = (String) model.getValueAt(entry.getIdentifier(), 0);
-						if (s.toLowerCase().startsWith(txtRechercher.getText().toLowerCase())){
+						String s = (String) model.getValueAt(
+								entry.getIdentifier(), 0);
+						if (s.toLowerCase().startsWith(
+								txtRechercher.getText().toLowerCase())) {
 							return true;
 						} else {
 							return false;
 						}
 					}
-					
+
 				};
 				sorter.setRowFilter(filter);
 			}
@@ -143,14 +162,14 @@ public class RegleDialog extends JDialog {
 		txtRechercher.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (txtRechercher.getText().equals("Rechercher")){
+				if (txtRechercher.getText().equals("Rechercher")) {
 					txtRechercher.setText("");
 				}
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (txtRechercher.getText().equals("")){
+				if (txtRechercher.getText().equals("")) {
 					txtRechercher.setText("Rechercher");
 					sorter.setRowFilter(null);
 				}
@@ -160,7 +179,7 @@ public class RegleDialog extends JDialog {
 		txtRechercher.setColumns(10);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(0,0));
+		scrollPane.setPreferredSize(new Dimension(0, 0));
 		splitPane.setRightComponent(scrollPane_1);
 
 		PrevisuRegle previsuRegle = new PrevisuRegle(tableModel);
@@ -220,33 +239,32 @@ public class RegleDialog extends JDialog {
 				}
 			}
 		});
+		
 		JButton cancelButton = new JButton("Fermer");
 		panel.add(cancelButton);
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
+				if (indexRegleAModif != -1) {
+					SystemeExpert.getInstance().getBdr()
+							.set(indexRegleAModif, regleSave);
+				}
+				indexRegleAModif = -1;
 				dispose();
 			}
 		});
 
 	}
 
-	@Override
-	public void dispose() {
-		tableModel.reset();
-		super.dispose();
-
-	}
-
 	private void chargerRegle(Regle regle) {
 		regleTemp = regle;
+		regleSave = new Regle(regle);
 		tableModel.setRegle(regleTemp);
 
 	}
 
 	public static void showDialog(JFrame owner) {
 		if (RD == null || !RD.isVisible()) {
-			RD = new RegleDialog(owner, new Regle());
+			RD = new RegleDialog(owner);
 			RD.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			RD.setVisible(true);
 		}
@@ -254,7 +272,8 @@ public class RegleDialog extends JDialog {
 
 	public static void showDialog(JFrame owner, Regle regle) {
 		if (RD == null) {
-			RD = new RegleDialog(owner, regle);
+			RD = new RegleDialog(owner);
+			RD.chargerRegle(regle);
 			RD.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			RD.setVisible(true);
 		} else if (!RD.isVisible()) {

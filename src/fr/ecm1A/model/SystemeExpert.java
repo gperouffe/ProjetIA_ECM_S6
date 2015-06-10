@@ -1,10 +1,15 @@
 package fr.ecm1A.model;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+
 public class SystemeExpert {
 
 	private BdFaits bdf;
 	private BdRegles bdr;
 	private static SystemeExpert instance;
+	private DefaultTreeModel log;
 
 	private SystemeExpert() {
 		bdf = new BdFaits();
@@ -34,46 +39,61 @@ public class SystemeExpert {
 		this.bdr = bdr;
 	}
 
+	public TreeModel getLog() {
+		return log;
+	}
+
 	public void chainageAvant() {
 		Boolean saturation = new Boolean(false);
+		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(
+				"Chaînage avant");
+		log = new DefaultTreeModel(parent);
+		int i = 1;
 		while (!saturation) {
 			saturation = true;
+			DefaultMutableTreeNode parcours = new DefaultMutableTreeNode(
+					"Parcours n°" + i);
 			for (Regle r : this.bdr) {
 				Boolean declenchement = new Boolean(true);
-				for (String cond : r.getConditions()) {
-					Fait condFait = bdf.find(cond);
-					if (condFait == null || !condFait.getVal()) {
-						declenchement = false;
-					}
-				}
 				Fait conclFait = bdf.find(r.getConclusion());
-				if (declenchement) {
-					if (conclFait == null) {
-						conclFait = new Fait(r.getConclusion());
-						conclFait.valider();
-						conclFait.setModified(true);
-						bdf.add(conclFait);
+				if (conclFait == null) {
+					conclFait = new Fait(r.getConclusion());
+					bdf.add(conclFait);
+				}
+				if (!conclFait.getVal()) {
+					for (String cond : r.getConditions()) {
+						Fait condFait = bdf.find(cond);
+						if (condFait == null || !condFait.getVal()) {
+							declenchement = false;
+						}
 					}
-					if (!conclFait.getVal()) {
-						conclFait.valider();
-						conclFait.setModified(true);
-						bdf.notifyObservers();
-						saturation = false;
-					}
-				} else {
-					if (conclFait == null) {
-						conclFait = new Fait(r.getConclusion());
-						bdf.add(conclFait);
+					if (declenchement) {
+						if (!conclFait.getVal()) {
+							conclFait.valider();
+							bdf.notifyObservers();
+							saturation = false;
+						}
+						DefaultMutableTreeNode noeud = new DefaultMutableTreeNode(
+								r.getConclusion());
+						parcours.add(noeud);
+						for (String s : r.getConditions()) {
+							noeud.add(new DefaultMutableTreeNode(s));
+						}
 					}
 				}
 			}
+			if (!saturation) {
+				parent.add(parcours);
+			}
+			i++;
 		}
 	}
 
-	public Boolean chainageArriere(String but) {
+	private Boolean chainageArriereRec(String but, DefaultMutableTreeNode parent) {
 		Boolean succes = false;
 		Fait faitBut = bdf.find(but);
-		if (but == null || but.equals("")){
+		DefaultMutableTreeNode noeudBut = new DefaultMutableTreeNode(but);
+		if (but == null || but.equals("")) {
 			return false;
 		}
 		if (faitBut == null) {
@@ -83,6 +103,7 @@ public class SystemeExpert {
 			return false;
 		}
 		if (faitBut.getVal()) {
+			parent.add(noeudBut);
 			return true;
 		} else {
 			int indr = 0;
@@ -96,30 +117,34 @@ public class SystemeExpert {
 					int tailleCond = C.size();
 					while (indc < tailleCond & possible) {
 						String condi = C.get(indc);
-						Fait condiFait = bdf.find(condi);
-						if (condiFait == null) {
-							if (!chainageArriere(condi))
-								possible = false;
-						} else if (!condiFait.getVal()) {
-							if (!chainageArriere(condi))
-								possible = false;
-						}
+						if (!chainageArriereRec(condi, noeudBut))
+							possible = false;
 						indc++;
 					}
 					if (possible) {
 						succes = true;
+					} else {
+						noeudBut.removeAllChildren();
 					}
 				}
 				indr++;
 			}
 			if (succes) {
 				faitBut.valider();
-				faitBut.setModified(true);
+				parent.add(noeudBut);
 				bdf.notifyObservers();
 				return true;
 			} else
 				return false;
 		}
 
+	}
+
+	public Boolean chainageArriere(String but) {
+		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(
+				"Chaînage avant");
+		log = new DefaultTreeModel(parent);
+		Boolean reussite = chainageArriereRec(but, parent);
+		return reussite;
 	}
 }

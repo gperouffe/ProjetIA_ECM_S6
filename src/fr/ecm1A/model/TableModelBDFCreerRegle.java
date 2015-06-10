@@ -17,6 +17,7 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 	private String[] entetes = { "Fait", "Condition", "Conclusion" };
 	private Regle regle;
 	private int indexCcl;
+	private boolean chargement = false;
 
 	public TableModelBDFCreerRegle() {
 		super();
@@ -29,6 +30,7 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 	
 	public void setRegle(Regle regle){
 		reset();
+		chargement = true;
 		this.regle = regle;
 		for(String x : regle.getConditions()){
 			Fait rech = bdf.find(x);
@@ -53,6 +55,7 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 			bdf.add(nvFait);
 			indexCcl = bdf.indexOf(nvFait);
 		}
+		chargement = false;
 		fireTableDataChanged();
 		notifyObservers();
 	}
@@ -159,7 +162,7 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 
 	@Override
 	public void update(Observable obs) {
-		if (obs==bdf) {
+		if (obs==bdf&&!chargement) {
 			selectionCond.clear();
 			indexCcl = -1;
 			updateRegle();
@@ -169,8 +172,6 @@ public class TableModelBDFCreerRegle extends AbstractTableModel implements
 	}
 
 	private void updateRegle() {
-		selectionCond.clear();
-		indexCcl = -1;
 		ArrayList<String> aSupprimer = new ArrayList<String>();
 		for(String x : regle.getConditions()){
 			Fait rech = bdf.find(x);

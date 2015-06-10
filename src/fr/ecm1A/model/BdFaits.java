@@ -20,17 +20,6 @@ public class BdFaits extends ALObservable<Fait> {
 	public BdFaits(String chemin) {
 		this.open(chemin);
 	}
-	
-	public String getModified(){
-		String str = new String();
-		for(Fait f : this){
-			if(f.getModified()){
-				f.setModified(false);
-				str+="\n"+f.getNom();
-			}
-		}
-		return str;
-	}
 
 	public void open(String chemin) {
 		File save = new File(chemin);
