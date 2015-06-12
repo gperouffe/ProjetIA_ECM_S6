@@ -6,12 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 
 @SuppressWarnings("serial")
@@ -32,6 +34,11 @@ public class ExplicationDialog extends JDialog {
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 
 		tree = new JTree();
+		DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
+	    renderer.setLeafIcon(new ImageIcon(getClass().getResource("/OK.png")));
+	    renderer.setClosedIcon(new ImageIcon(getClass().getResource("/plus.png")));
+	    renderer.setOpenIcon(new ImageIcon(getClass().getResource("/plus.png")));
+		
 		scrollPane.setViewportView(tree);
 
 		ActionListener escapeClose = new ActionListener() {

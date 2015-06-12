@@ -70,7 +70,6 @@ public class SystemeExpert {
 					if (declenchement) {
 						if (!conclFait.getVal()) {
 							conclFait.valider();
-							bdf.notifyObservers();
 							saturation = false;
 						}
 						DefaultMutableTreeNode noeud = new DefaultMutableTreeNode(
@@ -87,6 +86,7 @@ public class SystemeExpert {
 			}
 			i++;
 		}
+		bdf.notifyObservers();
 	}
 
 	private Boolean chainageArriereRec(String but, DefaultMutableTreeNode parent) {
@@ -142,7 +142,7 @@ public class SystemeExpert {
 
 	public Boolean chainageArriere(String but) {
 		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(
-				"Chaînage avant");
+				"Chaînage arrière");
 		log = new DefaultTreeModel(parent);
 		Boolean reussite = chainageArriereRec(but, parent);
 		return reussite;
