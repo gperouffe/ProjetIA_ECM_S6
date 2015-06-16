@@ -8,7 +8,11 @@ public class Fait {
 	public Fait(String nom) {
 		this.nom = nom;
 		this.val = false;
-
+	}
+	
+	public Fait(Fait f){
+		this.nom = new String(f.nom);
+		this.val = new Boolean(f.val);
 	}
 
 	public String getNom() {

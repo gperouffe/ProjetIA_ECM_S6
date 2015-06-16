@@ -12,15 +12,7 @@ public class BdRegles extends ALObservable<Regle> {
 
 	public BdRegles() {
 	}
-
-	public BdRegles(BdRegles bdr) {
-		super(bdr);
-	}
-
-	public BdRegles(String chemin) {
-		this.open(chemin);
-	}
-
+	
 	public void open(String chemin) {
 		File save = new File(chemin);
 		BufferedReader bfr = null;

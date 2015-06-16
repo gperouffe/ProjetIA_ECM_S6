@@ -144,7 +144,7 @@ public class SystemeExpert {
 		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(
 				"Chaînage arrière");
 		log = new DefaultTreeModel(parent);
-		Boolean reussite = chainageArriereRec(but, parent);
-		return reussite;
+		return chainageArriereRec(but, parent);
+		
 	}
 }

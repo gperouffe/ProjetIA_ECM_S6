@@ -13,14 +13,6 @@ public class BdFaits extends ALObservable<Fait> {
 	public BdFaits() {
 	}
 
-	public BdFaits(BdFaits bdf) {
-		super(bdf);
-	}
-
-	public BdFaits(String chemin) {
-		this.open(chemin);
-	}
-
 	public void open(String chemin) {
 		File save = new File(chemin);
 		BufferedReader bfr = null;
@@ -35,7 +27,7 @@ public class BdFaits extends ALObservable<Fait> {
 					lecture = lecture[0].split(";");
 					Fait x = new Fait(lecture[0]);
 					if (lecture[1].equals("true")) {
-						x.setVal(true);
+						x.valider();
 					}
 					this.add(x);
 				}
