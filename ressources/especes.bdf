@@ -1,0 +1,60 @@
+emb_Vertébré;false
+emb_Arthropode;false
+emb_Mollusque;false
+emb_Echinoderme;false
+ss-r_Protozoaire;false
+ss-r_Métazoaire;false
+emb_Annélide;false
+emb_Cnidaire;false
+cla_Bivalve;false
+cla_Gastéropode;false
+cla_Céphalopode;false
+cla_Chondrichthyen;false
+cla_Ostéichthyen;false
+cla_Actinoptérygien;false
+cla_Crocodilien;false
+cla_Oiseau;false
+cla_Mammifère;false
+cla_Squamate;false
+cla_Chélonien;false
+cla_Lissamphibien;false
+cla_Insecte;false
+cla_Crustacé;false
+cla_Arachnide;false
+cla_Myriapode;false
+car_Unicellulaire;false
+car_Multicellulaire;true
+car_Squelette interne;true
+car_Crâne;true
+supcla_Tétrapode;false
+car_Squelette cartilagineux ;false
+car_Squelette osseux ;true
+car_Nageoires à rayons;false
+car_Quatre membres;true
+car_Gésier;false
+car_Trou triangulaire au niveau des tempes;false
+car_Plumes;false
+car_Mamelles;true
+car_Mâchoire à large ouverture;false
+car_Carapace;false
+car_Quatre doigts à la main;false
+car_Ecailles en forme de dents;false
+car_Squelette externe;false
+car_Pattes articulées;true
+car_Six Pattes;false
+car_Deux Antennes;false
+car_Quatre antennes;false
+car_Huit pattes;false
+car_Nombreuses paires de pattes;false
+car_Coquille;false
+car_Corps en deux parties;false
+car_Une ou deux paires de tentacules sur la tête;false
+car_Pied porteur;false
+car_Nombreux tentacules sur la tête;false
+car_Squelette dans la peau;false
+car_Corps formé d'anneaux;false
+car_Harpons urticants;false
+car_Poils;true
+emb_Mammifère;false
+supcla_Poisson;false
+car_Branchies;false

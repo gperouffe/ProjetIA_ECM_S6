@@ -1,0 +1,26 @@
+car_Multicellulaire,;ss-r_Métazoaire
+car_Unicellulaire,;ss-r_Protozoaire
+car_Crâne,car_Squelette interne,ss-r_Métazoaire,;emb_Vertébré
+emb_Vertébré,car_Quatre membres,;supcla_Tétrapode
+car_Branchies,emb_Vertébré,;supcla_Poisson
+car_Squelette externe,car_Pattes articulées,ss-r_Métazoaire,;emb_Arthropode
+car_Coquille,ss-r_Métazoaire,;emb_Mollusque
+car_Squelette dans la peau,ss-r_Métazoaire,;emb_Echinoderme
+car_Corps formé d'anneaux,ss-r_Métazoaire,;emb_Annélide
+car_Harpons urticants,ss-r_Métazoaire,;emb_Cnidaire
+car_Ecailles en forme de dents,supcla_Poisson,car_Squelette cartilagineux ,;cla_Chondrichthyen
+supcla_Poisson,car_Squelette osseux ,;cla_Ostéichthyen
+car_Nageoires à rayons,emb_Vertébré,;cla_Actinoptérygien
+supcla_Tétrapode,car_Trou triangulaire au niveau des tempes,car_Gésier,;cla_Crocodilien
+car_Plumes,car_Gésier,supcla_Tétrapode,;cla_Oiseau
+car_Poils,supcla_Tétrapode,car_Mamelles,;cla_Mammifère
+supcla_Tétrapode,car_Mâchoire à large ouverture,;cla_Squamate
+car_Carapace,supcla_Tétrapode,;cla_Chélonien
+supcla_Tétrapode,car_Quatre doigts à la main,;cla_Lissamphibien
+emb_Arthropode,car_Six Pattes,car_Deux Antennes,;cla_Insecte
+emb_Arthropode,car_Quatre antennes,;cla_Crustacé
+emb_Arthropode,car_Huit pattes,;cla_Arachnide
+emb_Arthropode,car_Nombreuses paires de pattes,;cla_Myriapode
+emb_Mollusque,car_Corps en deux parties,;cla_Bivalve
+car_Une ou deux paires de tentacules sur la tête,car_Pied porteur,emb_Mollusque,;cla_Gastéropode
+emb_Mollusque,car_Nombreux tentacules sur la tête,;cla_Céphalopode
