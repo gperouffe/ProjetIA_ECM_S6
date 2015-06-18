@@ -7,12 +7,25 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Classe représentant une base de règles
+ *
+ * @see AlObservable
+ * @see Regle
+ */
 @SuppressWarnings("serial")
 public class BdRegles extends ALObservable<Regle> {
 
-	public BdRegles() {
-	}
+	/**
+	 * Constructeur par défaut
+	 */
+	public BdRegles() {}
 	
+	/**
+	 * Ouvre une base de règles à partir du chemin spécifié.
+	 * 
+	 * @param chemin
+	 */
 	public void open(String chemin) {
 		File save = new File(chemin);
 		BufferedReader bfr = null;
@@ -48,7 +61,12 @@ public class BdRegles extends ALObservable<Regle> {
 		}
 
 	}
-
+	
+	/**
+	 * Sauvegarde la base de règles au chemin spécifié.
+	 * 
+	 * @param chemin
+	 */
 	public void save(String chemin) {
 		File save = new File(chemin);
 		BufferedWriter bfw = null;

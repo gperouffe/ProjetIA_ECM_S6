@@ -4,18 +4,50 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+/**
+ * Classe Singleton représentant le système expert, c'est à dire l'ensemble
+ * composé des bases de faits et de règles et du moteur d'inférences.
+ */
 public class SystemeExpert {
 
+	/**
+	 * Base de Faits
+	 * 
+	 * @see BdFaits
+	 */
 	private BdFaits bdf;
+
+	/**
+	 * Base de Règles
+	 * 
+	 * @see BdRegles
+	 */
 	private BdRegles bdr;
+
+	/**
+	 * Instance du Systeme Expert
+	 */
 	private static SystemeExpert instance;
+
+	/**
+	 * Arbre destiné à garder une trace du fonctionnement du moteur
+	 * d'inférences.
+	 */
 	private DefaultTreeModel log;
 
+	/**
+	 * Constructeur par défaut de SystemeExpert
+	 */
 	private SystemeExpert() {
 		bdf = new BdFaits();
 		bdr = new BdRegles();
 	}
 
+	/**
+	 * Instanciation du SystemeExpert
+	 * 
+	 * @return Instance du SystemeExpert
+	 */
 	public static SystemeExpert getInstance() {
 		if (instance == null) {
 			instance = new SystemeExpert();
@@ -43,6 +75,9 @@ public class SystemeExpert {
 		return log;
 	}
 
+	/**
+	 * Execute l'algorithme du chainage avant sur les attributs bdf et bdr.
+	 */
 	public void chainageAvant() {
 		Boolean saturation = new Boolean(false);
 		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(
@@ -89,6 +124,14 @@ public class SystemeExpert {
 		bdf.notifyObservers();
 	}
 
+	/**
+	 * Execute le chainage arriere à partir d'un fait 'but' sur les attributs
+	 * bdf et bdr. Garde la trace du fonctionnement sous le noeud 'parent'.
+	 * 
+	 * @param but
+	 * @param parent
+	 * @return true si le chainage arriere a réussi, false sinon.
+	 */
 	private Boolean chainageArriereRec(String but, DefaultMutableTreeNode parent) {
 		Boolean succes = false;
 		Fait faitBut = bdf.find(but);
@@ -140,11 +183,18 @@ public class SystemeExpert {
 
 	}
 
+	/**
+	 * Execute l'algorithme du chainage arrière à partir du fait 'but'. Garde la
+	 * trace du fonctionnement sous la racine de l'arbre log
+	 * 
+	 * @param but
+	 * @return true si le chainage arriere a réussi, false sinon.
+	 */
 	public Boolean chainageArriere(String but) {
 		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(
 				"Chaînage arrière");
 		log = new DefaultTreeModel(parent);
 		return chainageArriereRec(but, parent);
-		
+
 	}
 }

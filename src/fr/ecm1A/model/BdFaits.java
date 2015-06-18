@@ -7,12 +7,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * 
+ * Classe représentant une base de faits
+ * 
+ * @see ALObservable
+ * @see Fait
+ */
 @SuppressWarnings("serial")
 public class BdFaits extends ALObservable<Fait> {
 
+	/**
+	 * Constructeur par défaut
+	 */
 	public BdFaits() {
 	}
 
+	/**
+	 * Ouvre une base de fait à partir du chemin spécifié.
+	 * 
+	 * @param chemin
+	 */
 	public void open(String chemin) {
 		File save = new File(chemin);
 		BufferedReader bfr = null;
@@ -47,6 +62,11 @@ public class BdFaits extends ALObservable<Fait> {
 		}
 	}
 
+	/**
+	 * Sauvegarde la base de fait au chemin spécifié.
+	 * 
+	 * @param chemin
+	 */
 	public void save(String chemin) {
 		File save = new File(chemin);
 		BufferedWriter bfw = null;
@@ -69,6 +89,13 @@ public class BdFaits extends ALObservable<Fait> {
 		}
 	}
 
+	/**
+	 * Recherche dans la base de fait un fait portant le nom passé en paramètre.
+	 * 
+	 * @param nom
+	 * @return Fait portant le nom spécifié
+	 * @see Fait
+	 */
 	public Fait find(String nom) {
 		Fait resultat = null;
 		int i = 0;

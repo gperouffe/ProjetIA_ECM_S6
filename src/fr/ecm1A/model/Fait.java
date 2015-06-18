@@ -1,20 +1,40 @@
 package fr.ecm1A.model;
 
+/**
+ * Classe représentant un fait
+ */
 public class Fait {
 
+	/**
+	 * Nom du fait
+	 */
 	private String nom;
+	
+	/**
+	 * Valeur de vérité du fait
+	 */
 	private Boolean val;
 
+	/**
+	 * Constructeur de Fait
+	 * Par défaut, la valeur de vérité d'un fait est toujours false.
+	 * 
+	 * @param nom
+	 * 			Nom du nouveau fait.
+	 */
 	public Fait(String nom) {
 		this.nom = nom;
 		this.val = false;
 	}
 	
+	/**
+	 * Constructeur par copie
+	 */
 	public Fait(Fait f){
 		this.nom = new String(f.nom);
 		this.val = new Boolean(f.val);
 	}
-
+	
 	public String getNom() {
 		return nom;
 	}
@@ -31,7 +51,9 @@ public class Fait {
 		this.val = val;
 	}
 
-
+	/**
+	 * Passe la valeur de vérité du fait à true.
+	 */
 	public void valider() {
 		this.val = true;
 	}
